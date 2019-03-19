@@ -477,8 +477,7 @@ class Svea_Checkout_Model_Checkout_Api_BuildOrder
 
         $methodTitle = $shippingAddress->getShippingDescription();
 
-
-        if ($noSave) {
+        if (true === $noSave) {
             $ratesCollection = $shippingAddress->getShippingRatesCollection();
             foreach ($ratesCollection as $rate) {
                 if ($rate->getCode() == $method) {
