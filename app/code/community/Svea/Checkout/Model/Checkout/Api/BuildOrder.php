@@ -26,7 +26,8 @@ class Svea_Checkout_Model_Checkout_Api_BuildOrder
      *
      * @return bool
      */
-    public function sveaOrderHasErrors($sveaOrder, $quote, $response, $tries = 0){
+    public function sveaOrderHasErrors($sveaOrder, $quote, $response, $tries = 0)
+    {
         if (is_object($response)) {
             $response = $response->getData();
         }
@@ -38,10 +39,9 @@ class Svea_Checkout_Model_Checkout_Api_BuildOrder
 
         if (sizeof($diff['error'])) {
             if ($tries >= 2) {
-                Mage::log('?', null, 'sveacheckout_debug.log');
+                Mage::log( '($tries >= 2)', null, 'sveacheckout_debug.log');
                 return true;
             }
-
 
             if(!$this->sveaOrderHasErrors($sveaOrder, $quote->collectTotals(), $response, $tries + 1)) {
                 $quote->save();
@@ -50,14 +50,14 @@ class Svea_Checkout_Model_Checkout_Api_BuildOrder
             }
 
             if (isset($response['Status']) && $response['Status'] != 'Created') {
-                Mage::log('?', null, 'sveacheckout_debug.log');
+                Mage::log('(isset($response[\' Status \']) && $response[\' Status \'] != \' Created \')', null, 'sveacheckout_debug.log');
                 return true;
             }
 
             try {
                 $updatedOrder = $sveaOrder->setCheckoutOrderId((int)$response['OrderId'])->updateOrder();
+                Mage::log( '$this->sveaOrderHasErrors($sveaOrder, $quote, $updatedOrder, $tries + 1)', null, 'sveacheckout_debug.log');
 
-                Mage::log('?', null, 'sveacheckout_debug.log');
                 return $this->sveaOrderHasErrors($sveaOrder, $quote, $updatedOrder, $tries + 1);
             } catch (Exception $e) {
 
